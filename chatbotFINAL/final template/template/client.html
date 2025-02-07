@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        /* Basic styling for the chat interface */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        /* Chatbox container styling */
+        #chatbox {
+            width: 400px;
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        /* Message input field styling */
+        #message {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Send button styling */
+        button {
+            width: 18%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Chat message area */
+        .message {
+            padding: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-message {
+            text-align: right;
+        }
+
+        .bot-message {
+            text-align: left;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>WebSocket Chat</h1>
+<div id="chatbox"></div>
+<input type="text" id="message" placeholder="Type a message..." />
+<button onclick="sendMessage()">Send</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+<script>
+    var socket = io.connect('http://127.0.0.1:5002'); // Connect to Socket.IO server
+
+    var chatbox = document.getElementById('chatbox');
+    var messageInput = document.getElementById('message');
+
+    // Function to append messages to the chatbox
+    function appendMessage(message, sender) {
+        var messageElement = document.createElement('div');
+        messageElement.textContent = message;
+        messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+        chatbox.appendChild(messageElement);
+        chatbox.scrollTop = chatbox.scrollHeight;  // Auto-scroll to the bottom
+    }
+
+    // Send message 

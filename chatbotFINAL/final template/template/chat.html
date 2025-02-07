@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        #chatbox {
+            width: 400px;
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        #message {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 18%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .message {
+            padding: 5px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-message {
+            text-align: right;
+        }
+
+        .bot-message {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<h1>WebSocket Chat</h1>
+<div id="chatbox"></div>
+<input type="text" id="message" placeholder="Type a message..." />
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    const ws = new WebSocket("ws://localhost:8010");  // Use the correct port
+
+    ws.onopen = () => {
+        console.log("Connected to the WebSocket server");
+    };
+
+    ws.onmessage = (event) => {
+        const chatbox = document.getElementById("chatbox");
+        const message = document.createElement("div");
+        message.textContent = event.data;
+        chatbox.appendChild(message);
+        console.log(message);
+    };
+
+    let username = prompt("Enter your username:");
+
+    // Function to send messages
+    function sendMessage() {
+        const input = document.getElementById("message");
+        const message = `${username}: ${input.value}`;
+        console.log("Sending message:", message); // For debugging purposes
+        ws.send(message);
+        input.value = ""; // Clear the input field after sending the message
+    }
+</script>
+
+</body>
+</html>
